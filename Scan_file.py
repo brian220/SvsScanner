@@ -17,7 +17,12 @@ cut_folder = r'C:\Users\nctu\Desktop\svs_scanner\cut_image'
 valid_images = ['.svs']
 """
 Use Openslide to scan a svs file in a folder
-There are three functions can use
+There are 5 functions can use (detailed of them is in Scan_svs.py):
+1. scan_detail
+2. show_region
+3. scan_rectangle
+4. scan_whole
+5. scan_annocation
 """
 def scan_file():
   scriptpath = os.path.dirname(__file__)
@@ -35,19 +40,7 @@ def scan_file():
      (orig_w, orig_h) = scan.level_dimensions[current_level]
      d_factor = scan.level_downsamples[current_level]
      Scan_svs.scan_detail(scan, orig_w, orig_h, d_factor)
-     Scan_svs.show_region(scan,  65865, 23331, 1728, 1632, d_factor, current_level)
-     Scan_svs.scan_rectangle(scan, 65865, 23331, 1728, 1632, 0)
      #Scan_svs.scan_whole(scan, orig_w, orig_h, d_factor, current_level)
      scan.close
 
 scan_file()
-
- #ann 0
- #Scan_svs.show_region(scan,  53672, 26724, 1824, 1856, d_factor, current_level)
- #Scan_svs.scan_rectangle(scan, 53672, 26724, 1824, 1856, 0)
- #ann 1
- #Scan_svs.show_region(scan,  54055, 34853, 2304, 2784, d_factor, current_level)
- #Scan_svs.scan_rectangle(scan, 54055, 34853, 2304, 2784, 0)
- #ann 2
- #Scan_svs.show_region(scan,  59336, 41669, 1824, 2208, d_factor, current_level)
- #Scan_svs.scan_rectangle(scan, 59336, 41669, 1824, 2208, 0)
