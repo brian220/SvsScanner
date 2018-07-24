@@ -14,7 +14,7 @@ import os
 dir_img = r'C:\Users\nctu\Desktop\svs_scanner\svs_image'
 cut_folder = r'C:\Users\nctu\Desktop\svs_scanner\cut_image'
 
-valid_images = ['.svs']
+valid_images = ['.tif']
 """
 Use Openslide to scan a svs file in a folder
 There are 5 functions can use (detailed of them is in Scan_svs.py):
@@ -40,6 +40,8 @@ def scan_file():
      (orig_w, orig_h) = scan.level_dimensions[current_level]
      d_factor = scan.level_downsamples[current_level]
      Scan_svs.scan_detail(scan, orig_w, orig_h, d_factor)
+     Scan_svs.scan_annocation(scan, "patient_004_node_4.xml")
+
      #Scan_svs.scan_whole(scan, orig_w, orig_h, d_factor, current_level)
      scan.close
 
