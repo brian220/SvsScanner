@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 ICIAR2018 - Grand Challenge on Breast Cancer Histology Images
-https://iciar2018-challenge.grand-challenge.org/home/
 """
 import sys
 sys.path.append("../Read_xml.py")
@@ -45,6 +44,7 @@ The scan is under level 0
 """
 def scan_rectangle(scan, x, y, width, height, ann_index):
     patch_size = 200
+    print ("Patch size:" + str(patch_size))
     filename = 0
     whole_img =  Image.new('RGBA',(width, height))
     for w in range(x, x + width, patch_size):
@@ -63,6 +63,7 @@ Combine the images together and store in myimg.png
 """
 def scan_whole(scan, orig_w, orig_h, d_factor, current_level):
     patch_size = 1000
+    print ("Patch size:" + str(patch_size))
     whole_img =  Image.new('RGBA',(orig_w, orig_h))
     filename = 0
     for w in range(0, orig_w, patch_size):
@@ -84,12 +85,13 @@ def scan_whole(scan, orig_w, orig_h, d_factor, current_level):
       whole_img.save("whole_slide.png")
 
 """
+(Not used recently)
 Cut the xml's annotation parts in the svs file and store in the folder /ann_image
+at level 0
 """
 def scan_annocation(scan, xml_filename):
   annlist = Read_xml.read_xml(xml_filename)
-  filename = 0
-  for ann in annlist:
-    img = scan.read_region((ann.border[0], ann.border[2]), current_level, (ann.box[0] , ann.box[1]))
-    img.save(str(ann_folder)+ '\\' + str(filename) + ".png")
-    filename += 1
+  for index, ann in enumerate(annlist):
+    #print (ann.border[0], ann.border[2], ann.box[0] , ann.box[1])
+    img = scan.read_region((ann.border[0], ann.border[2]), 0, (ann.border[1] - ann.border[0], ann.border[3] - ann.border[2]))
+    img.save(str(ann_folder)+ '\\' + str(index) + ".png")

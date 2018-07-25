@@ -19,7 +19,7 @@ class Annotation():
     self.border[2] = min(self.coordinateY)
     self.border[3] = max(self.coordinateY)
 
-file_name = "patient_004_node_4.xml"
+#file_name = "patient_004_node_4.xml"
 def read_xml(file_name):
   annlist = []
   tree = ET.ElementTree(file = file_name)
@@ -39,6 +39,10 @@ def read_xml(file_name):
   for ann in annlist:
     print (ann.coordinateX)
     ann.compute_border()
+  for item in annlist:
+      print (item.name)
+      print (item.index)
+      print (item.border)
   return annlist
 
-read_xml("patient_004_node_4.xml")
+#read_xml("patient_004_node_4.xml")
