@@ -21,15 +21,20 @@ patch_size = 50
 polyXGroup = [2, 2, 8, 8, 5]
 polyYGroup = [12, 2, 9, 10, 10]
 
-def pointLieRight(x, y, y1, y2, x1, x2):
+class point (object):
+  def __init__(self, x, y):
+    self.x = x
+    self.y = y
+
+def pointLieRight(testPoint, polyPoint1, polyPoint2):
   lieRight = False
-  if y > min(y1, y2) and y <= max(y1, y2) and (x >= x1 or x >= x2):
-    if (x2 - x1) == 0:
+  if testPoint.y > min(polyPoint1.y, polyPoint2.y) and  testPoint.y <= max(polyPoint1.y, polyPoint2.y) and ( testPoint.x >= polyPoint1.x or testPoint.x >= polyPoint2.x):
+    if (polyPoint2.x - polyPoint1.x) == 0:
         lieRight = True
     else:
-      a = (y2 - y1) / (x2 - x1)
-      b = y1 - a * x1
-      if x > (y - b) / a:
+      a = (polyPoint2.y - polyPoint1.y) / (polyPoint2.x - polyPoint1.x)
+      b = polyPoint1.y - a * polyPoint1.x
+      if  testPoint.x > ( testPoint.y - b) / a:
         lieRight = True
   return lieRight
 
@@ -38,15 +43,21 @@ def dealWithPolyGroup(polyGroup):
   polyGroup.append(polyGroup[0])
   return polyGroup
 
-def pointInPoly(x, y, polyXGroup, polyYGroup):
+def pointInPoly(testPoint, polyXGroup, polyYGroup):
   inPoly = False
   polyXGroup = dealWithPolyGroup(polyXGroup)
   polyYGroup = dealWithPolyGroup(polyYGroup)
   for i in range(0, len(polyXGroup) - 1):
-      if (pointLieRight(x, y, polyYGroup[i], polyYGroup[i + 1], polyXGroup[i], polyXGroup[i + 1])):
+      polyPoint1 = point(polyXGroup[i], polyYGroup[i])
+      polyPoint2 = point(polyXGroup[i + 1], polyYGroup[i + 1])
+      if (pointLieRight(testPoint, polyPoint1, polyPoint2)):
         inPoly = not inPoly
   return inPoly
 
+print (pointInPoly(point(3,3), polyXGroup, polyYGroup))
+print (pointInPoly(point(3,10), polyXGroup, polyYGroup))
+print (pointInPoly(point(10,10), polyXGroup, polyYGroup))
+print (pointInPoly(point(4,8), polyXGroup, polyYGroup))
 """
 def ann_detect():
   annlist = Read_xml.read_xml("patient_004_node_4.xml")
