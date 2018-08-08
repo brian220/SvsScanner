@@ -21,24 +21,31 @@ patch_size = 50
 polyXGroup = [2, 2, 8, 8, 5]
 polyYGroup = [12, 2, 9, 10, 10]
 
-def inpoly(x, y, polyXGroup, polyYGroup):
-  pointInPoly = False
-  polyXGroup = [float(xInPoly) for xInPoly in polyXGroup]
-  polyYGroup = [float(yInPoly) for yInPoly in polyYGroup]
-  polyXGroup.append(polyXGroup[0])
-  polyYGroup.append(polyYGroup[0])
-  for i in range(0, len(polyXGroup) - 1):
-      # point will cross the line y = a * x + b, a is slope, b is y - a * x
-      if y > min(polyYGroup[i], polyYGroup[i + 1]) and y <= max(polyYGroup[i], polyYGroup[i + 1]) and (x >= polyXGroup[i] or x >= polyXGroup[i + 1]):
-        if (polyXGroup[i + 1] - polyXGroup[i]) == 0:
-            pointInPoly = not pointInPoly
-        else:
-          a = (polyYGroup[i + 1] - polyYGroup[i]) / (polyXGroup[i + 1] - polyXGroup[i])
-          b = polyYGroup[i] - a * polyXGroup[i]
-          if x > (y - b) / a:
-            pointInPoly = not pointInPoly
+def pointLieRight(x, y, y1, y2, x1, x2):
+  lieRight = False
+  if y > min(y1, y2) and y <= max(y1, y2) and (x >= x1 or x >= x2):
+    if (x2 - x1) == 0:
+        lieRight = True
+    else:
+      a = (y2 - y1) / (x2 - x1)
+      b = y1 - a * x1
+      if x > (y - b) / a:
+        lieRight = True
+  return lieRight
 
-  return pointInPoly
+def dealWithPolyGroup(polyGroup):
+  polyGroup = [float(number) for number in polyGroup]
+  polyGroup.append(polyGroup[0])
+  return polyGroup
+
+def pointInPoly(x, y, polyXGroup, polyYGroup):
+  inPoly = False
+  polyXGroup = dealWithPolyGroup(polyXGroup)
+  polyYGroup = dealWithPolyGroup(polyYGroup)
+  for i in range(0, len(polyXGroup) - 1):
+      if (pointLieRight(x, y, polyYGroup[i], polyYGroup[i + 1], polyXGroup[i], polyXGroup[i + 1])):
+        inPoly = not inPoly
+  return inPoly
 
 """
 def ann_detect():
