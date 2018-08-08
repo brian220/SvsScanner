@@ -38,6 +38,12 @@ def pointLieRight(testPoint, polyPoint1, polyPoint2):
         lieRight = True
   return lieRight
 
+def groupXY(polyXGroup, polyYGroup):
+  polyPointGroup = []
+  for i in range(0, len(polyXGroup)):
+      polyPointGroup.append(point(polyXGroup[i], polyYGroup[i]))
+  return polyPointGroup
+
 def dealWithPolyGroup(polyGroup):
   polyGroup = [float(number) for number in polyGroup]
   polyGroup.append(polyGroup[0])
@@ -45,19 +51,19 @@ def dealWithPolyGroup(polyGroup):
 
 def pointInPoly(testPoint, polyXGroup, polyYGroup):
   inPoly = False
-  polyXGroup = dealWithPolyGroup(polyXGroup)
-  polyYGroup = dealWithPolyGroup(polyYGroup)
-  for i in range(0, len(polyXGroup) - 1):
-      polyPoint1 = point(polyXGroup[i], polyYGroup[i])
-      polyPoint2 = point(polyXGroup[i + 1], polyYGroup[i + 1])
-      if (pointLieRight(testPoint, polyPoint1, polyPoint2)):
+  dealWithPolyGroup(polyXGroup)
+  dealWithPolyGroup(polyYGroup)
+  polyPointGroup = groupXY(polyXGroup, polyYGroup)
+  for i in range(0, len(polyPointGroup) - 1):
+      if (pointLieRight(testPoint, polyPointGroup[i], polyPointGroup[i+1])):
         inPoly = not inPoly
   return inPoly
+
 
 print (pointInPoly(point(3,3), polyXGroup, polyYGroup))
 print (pointInPoly(point(3,10), polyXGroup, polyYGroup))
 print (pointInPoly(point(10,10), polyXGroup, polyYGroup))
-print (pointInPoly(point(4,8), polyXGroup, polyYGroup))
+print (pointInPoly(point(4, 8), polyXGroup, polyYGroup))
 """
 def ann_detect():
   annlist = Read_xml.read_xml("patient_004_node_4.xml")
