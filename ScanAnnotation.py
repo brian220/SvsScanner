@@ -74,8 +74,8 @@ def tagInPoly(ann, polyPointGroup):
 
 def fourPointsInPoly(i, j, pointInPolytag):
   inPoly = False
-  if patch_dict.get((i, j)) && patch_dict.get((i + patch_size, j)) &&
-     patch_dict.get((i , j + patch_size)) && patch_dict.get((i + patch_size, j + patch_size)):
+  if patch_dict.get((i, j)) and patch_dict.get((i + patch_size, j)) and
+     patch_dict.get((i , j + patch_size)) and patch_dict.get((i + patch_size, j + patch_size)):
      inpoly = True
   return inPoly
 
