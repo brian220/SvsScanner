@@ -60,6 +60,7 @@ def getPolyPoints(ann):
    polyXGroup = dealWithPolyGroup(ann.coordinateX)
    polyYGroup = dealWithPolyGroup(ann.coordinateY)
    polyPointGroup = groupXY(polyXGroup, polyYGroup)
+   return polyPointGroup
 
 # find out if each point is in the polygon, and use a tag to record in the dictionary
 def tagInPoly(ann, polyPointGroup):
