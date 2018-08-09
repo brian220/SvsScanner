@@ -6,7 +6,7 @@ sys.path.append("../Read_xml.py")
 sys.path.append("../PointInPoly")
 sys.path.append("../ShowAnnPart")
 import Read_xml
-from PointInPoly import point, pointInPoly, pointLieRight
+from PointInPoly import point, isInPoly, pointLieRight
 from ShowAnnPart import addPolygonGraph, addPatchGraph, showAnnGraph
 import openslide
 from openslide import open_slide # http://openslide.org/api/python/
@@ -24,6 +24,10 @@ def isFourAnglesInPoly(i, j, pointTag):
      inPoly = True
   return inPoly
 
+def savePatchFromSlide(i, j, imgIndex, scan):
+  img  = scan.read_region((i,j), 0 , (patchSize, patchSize))
+  img.save(str(dirFolder)+ '\\' + str(imgIndex) + ".png")
+
 def savePatchInsideRegions(ann, pointTag, scan):
   imgIndex = 0
   annImg = addPolygonGraph(ann.coordinateX, ann.coordinateY)
@@ -31,8 +35,7 @@ def savePatchInsideRegions(ann, pointTag, scan):
     for j in range(ann.border[2], ann.border[3], patchSize):
       if isFourAnglesInPoly(i, j, pointTag):
         addPatchGraph(annImg, i, j, patchSize)
-        img  = scan.read_region((i,j), 0 , (patchSize, patchSize))
-        img.save(str(dirFolder)+ '\\' + str(imgIndex) + ".png")
+        savePatchFromSlide(i, j, imgIndex, scan)
         imgIndex += 1
   showAnnGraph(annImg)
 
