@@ -34,18 +34,15 @@ def fourPointsInPoly(i, j, pointInPolytag):
 # save the region that is all in the polygon
 def saveInsideRegions(ann, pointInPolytag, scan):
   imgIndex = 0
-  if ann.index == 0:
-    annImg = addPolygonGraph(ann.coordinateX, ann.coordinateY)
+  annImg = addPolygonGraph(ann.coordinateX, ann.coordinateY)
   for i in range(ann.border[0], ann.border[1], patch_size):
     for j in range(ann.border[2], ann.border[3], patch_size):
       if fourPointsInPoly(i, j, pointInPolytag):
-        if ann.index == 0:
-          addPatchGraph(annImg, i, j, patch_size)
+        addPatchGraph(annImg, i, j, patch_size)
         img  = scan.read_region((i,j), 0 , (patch_size, patch_size))
         img.save(str(dir_folder)+ '\\' + str(imgIndex) + ".png")
         imgIndex += 1
-  if ann.index == 0:
-    showAnnGraph(annImg)
+  showAnnGraph(annImg)
 
 # find out if each point is in the polygon, and use a tag to record in the dictionary
 def tagInPoly(ann, polyPointGroup):
