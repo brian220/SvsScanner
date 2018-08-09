@@ -39,7 +39,7 @@ def savePatchInsideRegions(ann, pointTag, scan):
         imgIndex += 1
   showAnnGraph(annImg)
 
-# find out if each point is in the polygon, and use a tag True if it is, tag False if it is not
+# Find out if each point is in the polygon, and use a tag True if it is, tag False if it is not
 def tagPointInPoly(ann, polyPointGroup):
   pointTag = {}
   for i in range(ann.border[0], ann.border[1], patchSize):
