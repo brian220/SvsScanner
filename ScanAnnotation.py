@@ -18,26 +18,42 @@ dirFolder = r'C:\Users\nctu\Desktop\ScanAnnotation\inpoly'
 valid_images = ['.tif']
 patchSize = 10
 
-def isFourAnglesInPoly(i, j, pointTag):
-  inPoly = False
-  if pointTag.get((i, j)) and pointTag.get((i + patchSize, j)) and pointTag.get((i , j + patchSize)) and pointTag.get((i + patchSize, j + patchSize)):
-     inPoly = True
-  return inPoly
+def scanAnnotations():
+  annlist = Read_xml.read_xml("patient_004_node_4.xml")
+  scan = openScan()
+  for  ann in annlist:
+      polyPointGroup = getPolyPoints(ann)
+      pointTag = tagPointInPoly(ann, polyPointGroup)
+      savePatchInsideRegions(ann, pointTag, scan)
 
-def savePatchFromSlide(i, j, imgIndex, scan):
-  img  = scan.read_region((i,j), 0 , (patchSize, patchSize))
-  img.save(str(dirFolder)+ '\\' + str(imgIndex) + ".png")
+def openScan():
+  for f in os.listdir(dirImg):
+     ext = os.path.splitext(f)[1]
+     if ext.lower() not in valid_images:
+       continue
+     currPath = os.path.join(dirImg,f)
+     print(currPath)
+     scan = openslide.OpenSlide(currPath)
+  return scan
 
-def savePatchInsideRegions(ann, pointTag, scan):
-  imgIndex = 0
-  annImg = addPolygonGraph(ann.coordinateX, ann.coordinateY)
-  for i in range(ann.border[0], ann.border[1], patchSize):
-    for j in range(ann.border[2], ann.border[3], patchSize):
-      if isFourAnglesInPoly(i, j, pointTag):
-        addPatchGraph(annImg, i, j, patchSize)
-        savePatchFromSlide(i, j, imgIndex, scan)
-        imgIndex += 1
-  showAnnGraph(annImg)
+#get the points of annotation polygon
+def getPolyPoints(ann):
+   polyXGroup = dealWithPolyGroup(ann.coordinateX)
+   polyYGroup = dealWithPolyGroup(ann.coordinateY)
+   polyPointGroup = groupXY(polyXGroup, polyYGroup)
+   return polyPointGroup
+
+def dealWithPolyGroup(polyGroup):
+  polyGroup = [float(number) for number in polyGroup]
+  # It is a polygon so we add the first point to the end to make a closed graph
+  polyGroup.append(polyGroup[0])
+  return polyGroup
+ 
+def groupXY(polyXGroup, polyYGroup):
+  polyPointGroup = []
+  for i in range(0, len(polyXGroup)):
+      polyPointGroup.append(point(polyXGroup[i], polyYGroup[i]))
+  return polyPointGroup
 
 # Find out if each point is in the polygon, and use a tag True if it is, tag False if it is not
 def tagPointInPoly(ann, polyPointGroup):
@@ -50,42 +66,25 @@ def tagPointInPoly(ann, polyPointGroup):
         pointTag.update({(i, j) : False})
   return pointTag
 
-def groupXY(polyXGroup, polyYGroup):
-  polyPointGroup = []
-  for i in range(0, len(polyXGroup)):
-      polyPointGroup.append(point(polyXGroup[i], polyYGroup[i]))
-  return polyPointGroup
+def savePatchInsideRegions(ann, pointTag, scan):
+  imgIndex = 0
+  annImg = addPolygonGraph(ann.coordinateX, ann.coordinateY)
+  for i in range(ann.border[0], ann.border[1], patchSize):
+    for j in range(ann.border[2], ann.border[3], patchSize):
+      if isFourAnglesInPoly(i, j, pointTag):
+        addPatchGraph(annImg, i, j, patchSize)
+        savePatchFromSlide(i, j, imgIndex, scan)
+        imgIndex += 1
+  showAnnGraph(annImg)
 
-def dealWithPolyGroup(polyGroup):
-  polyGroup = [float(number) for number in polyGroup]
-  # It is a polygon so we add the first point to the end to make a closed graph
-  polyGroup.append(polyGroup[0])
-  return polyGroup
+def isFourAnglesInPoly(i, j, pointTag):
+  inPoly = False
+  if pointTag.get((i, j)) and pointTag.get((i + patchSize, j)) and pointTag.get((i , j + patchSize)) and pointTag.get((i + patchSize, j + patchSize)):
+     inPoly = True
+  return inPoly
 
-#get the points of annotation polygon
-def getPolyPoints(ann):
-   polyXGroup = dealWithPolyGroup(ann.coordinateX)
-   polyYGroup = dealWithPolyGroup(ann.coordinateY)
-   polyPointGroup = groupXY(polyXGroup, polyYGroup)
-   return polyPointGroup
-
-def openScan():
-  for f in os.listdir(dirImg):
-     ext = os.path.splitext(f)[1]
-     if ext.lower() not in valid_images:
-       continue
-     currPath = os.path.join(dirImg,f)
-     print(currPath)
-     # open scan
-     scan = openslide.OpenSlide(currPath)
-  return scan
-
-def scanAnnotations():
-  annlist = Read_xml.read_xml("patient_004_node_4.xml")
-  scan = openScan()
-  for  ann in annlist:
-      polyPointGroup = getPolyPoints(ann)
-      pointTag = tagPointInPoly(ann, polyPointGroup)
-      savePatchInsideRegions(ann, pointTag, scan)
+def savePatchFromSlide(i, j, imgIndex, scan):
+  img  = scan.read_region((i,j), 0 , (patchSize, patchSize))
+  img.save(str(dirFolder)+ '\\' + str(imgIndex) + ".png")
 
 scanAnnotations()
