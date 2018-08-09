@@ -48,7 +48,7 @@ def dealWithPolyGroup(polyGroup):
   # It is a polygon so we add the first point to the end to make a closed graph
   polyGroup.append(polyGroup[0])
   return polyGroup
- 
+
 def groupXY(polyXGroup, polyYGroup):
   polyPointGroup = []
   for i in range(0, len(polyXGroup)):
@@ -79,7 +79,10 @@ def savePatchInsideRegions(ann, pointTag, scan):
 
 def isFourAnglesInPoly(i, j, pointTag):
   inPoly = False
-  if pointTag.get((i, j)) and pointTag.get((i + patchSize, j)) and pointTag.get((i , j + patchSize)) and pointTag.get((i + patchSize, j + patchSize)):
+  if pointTag.get((i, j))\
+     and pointTag.get((i + patchSize, j))\
+     and pointTag.get((i , j + patchSize))\
+     and pointTag.get((i + patchSize, j + patchSize)):
      inPoly = True
   return inPoly
 

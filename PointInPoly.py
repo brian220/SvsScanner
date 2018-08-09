@@ -18,10 +18,12 @@ def isInPoly(testPoint, polyPointGroup):
       if (pointLieRight(testPoint, polyPointGroup[i], polyPointGroup[i+1])):
         inPoly = not inPoly
   return inPoly
-  
+
 def pointLieRight(testPoint, polyPoint1, polyPoint2):
   lieRight = False
-  if testPoint.y > min(polyPoint1.y, polyPoint2.y) and  testPoint.y <= max(polyPoint1.y, polyPoint2.y) and ( testPoint.x >= polyPoint1.x or testPoint.x >= polyPoint2.x):
+  if min(polyPoint1.y, polyPoint2.y) < testPoint.y <= max(polyPoint1.y, polyPoint2.y)\
+     and ( testPoint.x >= polyPoint1.x or testPoint.x >= polyPoint2.x):
+
     if (polyPoint2.x - polyPoint1.x) == 0:
         lieRight = True
     else:
