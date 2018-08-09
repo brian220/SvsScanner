@@ -1,13 +1,9 @@
 """
 This program is used to find out if a point is in the irregular polygon or not
-and then we can find out if a patch is in the annotation part
 method:
 Point-In-Polygon Algorithm — Determining Whether A Point Is Inside A Complex Polygon
 source: http://alienryderflex.com/polygon/
 """
-
-import numpy as np
-
 dir_folder = r'C:\Users\nctu\Desktop\ScanAnnotation\inpoly'
 patch_size = 50
 
