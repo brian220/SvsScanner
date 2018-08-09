@@ -12,6 +12,13 @@ class point (object):
     self.x = x
     self.y = y
 
+def isInPoly(testPoint, polyPointGroup):
+  inPoly = False
+  for i in range(0, len(polyPointGroup) - 1):
+      if (pointLieRight(testPoint, polyPointGroup[i], polyPointGroup[i+1])):
+        inPoly = not inPoly
+  return inPoly
+  
 def pointLieRight(testPoint, polyPoint1, polyPoint2):
   lieRight = False
   if testPoint.y > min(polyPoint1.y, polyPoint2.y) and  testPoint.y <= max(polyPoint1.y, polyPoint2.y) and ( testPoint.x >= polyPoint1.x or testPoint.x >= polyPoint2.x):
@@ -23,10 +30,3 @@ def pointLieRight(testPoint, polyPoint1, polyPoint2):
       if  testPoint.x > ( testPoint.y - b) / a:
         lieRight = True
   return lieRight
-
-def pointInPoly(testPoint, polyPointGroup):
-  inPoly = False
-  for i in range(0, len(polyPointGroup) - 1):
-      if (pointLieRight(testPoint, polyPointGroup[i], polyPointGroup[i+1])):
-        inPoly = not inPoly
-  return inPoly

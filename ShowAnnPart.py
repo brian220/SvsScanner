@@ -1,3 +1,6 @@
+"""
+Draw the graph that include the annotation part and patches part
+"""
 import matplotlib.pyplot as plt
 #class showAnnPart(object):
 
