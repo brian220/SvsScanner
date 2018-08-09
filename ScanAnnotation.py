@@ -1,11 +1,6 @@
 """
-This program is used to find out if a point is in the irregular polygon or not
-and then we can find out if a patch is in the annotation part
-method:
-Point-In-Polygon Algorithm — Determining Whether A Point Is Inside A Complex Polygon
-source: http://alienryderflex.com/polygon/
+This program is used to store patches which have all their 4 angles' coordinates are in the annotation polygon
 """
-
 import sys
 sys.path.append("../Read_xml.py")
 sys.path.append("../PointInPoly")
@@ -15,45 +10,42 @@ from PointInPoly import point, pointInPoly, pointLieRight
 from ShowAnnPart import addPolygonGraph, addPatchGraph, showAnnGraph
 import openslide
 from openslide import open_slide # http://openslide.org/api/python/
-import numpy as np
 from PIL import Image
-import math
 import os
 
-dir_img = r'C:\Users\nctu\Desktop\svs_scanner\svs_image'
-dir_folder = r'C:\Users\nctu\Desktop\ScanAnnotation\inpoly'
+dirImg = r'C:\Users\nctu\Desktop\svs_scanner\svs_image'
+dirFolder = r'C:\Users\nctu\Desktop\ScanAnnotation\inpoly'
 valid_images = ['.tif']
-patch_size = 10
+patchSize = 10
 
-def fourPointsInPoly(i, j, pointInPolytag):
+def isFourAnglesInPoly(i, j, pointTag):
   inPoly = False
-  if pointInPolytag.get((i, j)) and pointInPolytag.get((i + patch_size, j)) and pointInPolytag.get((i , j + patch_size)) and pointInPolytag.get((i + patch_size, j + patch_size)):
+  if pointTag.get((i, j)) and pointTag.get((i + patchSize, j)) and pointTag.get((i , j + patchSize)) and pointTag.get((i + patchSize, j + patchSize)):
      inPoly = True
   return inPoly
 
-# save the region that is all in the polygon
-def saveInsideRegions(ann, pointInPolytag, scan):
+def savePatchInsideRegions(ann, pointTag, scan):
   imgIndex = 0
   annImg = addPolygonGraph(ann.coordinateX, ann.coordinateY)
-  for i in range(ann.border[0], ann.border[1], patch_size):
-    for j in range(ann.border[2], ann.border[3], patch_size):
-      if fourPointsInPoly(i, j, pointInPolytag):
-        addPatchGraph(annImg, i, j, patch_size)
-        img  = scan.read_region((i,j), 0 , (patch_size, patch_size))
-        img.save(str(dir_folder)+ '\\' + str(imgIndex) + ".png")
+  for i in range(ann.border[0], ann.border[1], patchSize):
+    for j in range(ann.border[2], ann.border[3], patchSize):
+      if isFourAnglesInPoly(i, j, pointTag):
+        addPatchGraph(annImg, i, j, patchSize)
+        img  = scan.read_region((i,j), 0 , (patchSize, patchSize))
+        img.save(str(dirFolder)+ '\\' + str(imgIndex) + ".png")
         imgIndex += 1
   showAnnGraph(annImg)
 
-# find out if each point is in the polygon, and use a tag to record in the dictionary
-def tagInPoly(ann, polyPointGroup):
-  pointInPolytag = {}
-  for i in range(ann.border[0], ann.border[1], patch_size):
-    for j in range(ann.border[2], ann.border[3], patch_size):
-      if pointInPoly(point(i, j), polyPointGroup):
-        pointInPolytag.update({(i, j) : True})
+# find out if each point is in the polygon, and use a tag True if it is, tag False if it is not
+def tagPointInPoly(ann, polyPointGroup):
+  pointTag = {}
+  for i in range(ann.border[0], ann.border[1], patchSize):
+    for j in range(ann.border[2], ann.border[3], patchSize):
+      if isInPoly(point(i, j), polyPointGroup):
+        pointTag.update({(i, j) : True})
       else:
-        pointInPolytag.update({(i, j) : False})
-  return pointInPolytag
+        pointTag.update({(i, j) : False})
+  return pointTag
 
 def groupXY(polyXGroup, polyYGroup):
   polyPointGroup = []
@@ -63,9 +55,11 @@ def groupXY(polyXGroup, polyYGroup):
 
 def dealWithPolyGroup(polyGroup):
   polyGroup = [float(number) for number in polyGroup]
+  # It is a polygon so we add the first point to the end to make a closed graph
   polyGroup.append(polyGroup[0])
   return polyGroup
 
+#get the points of annotation polygon
 def getPolyPoints(ann):
    polyXGroup = dealWithPolyGroup(ann.coordinateX)
    polyYGroup = dealWithPolyGroup(ann.coordinateY)
@@ -73,14 +67,14 @@ def getPolyPoints(ann):
    return polyPointGroup
 
 def openScan():
-  for f in os.listdir(dir_img):
+  for f in os.listdir(dirImg):
      ext = os.path.splitext(f)[1]
      if ext.lower() not in valid_images:
        continue
-     curr_path = os.path.join(dir_img,f)
-     print(curr_path)
+     currPath = os.path.join(dirImg,f)
+     print(currPath)
      # open scan
-     scan = openslide.OpenSlide(curr_path)
+     scan = openslide.OpenSlide(currPath)
   return scan
 
 def scanAnnotations():
@@ -88,7 +82,7 @@ def scanAnnotations():
   scan = openScan()
   for  ann in annlist:
       polyPointGroup = getPolyPoints(ann)
-      pointInPolytag = tagInPoly(ann, polyPointGroup)
-      saveInsideRegions(ann, pointInPolytag, scan)
+      pointTag = tagPointInPoly(ann, polyPointGroup)
+      savePatchInsideRegions(ann, pointTag, scan)
 
 scanAnnotations()
