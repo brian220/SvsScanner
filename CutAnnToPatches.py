@@ -12,44 +12,29 @@ from PIL import Image
 dirFolder = r'C:\Users\nctu\Desktop\ScanAnnotation\inAnn'
 
 class cutAnnToPatches(object):
-  def __init__(self, currentAnn, scan):
+  def __init__(self, scan, currentAnn) :
     self.scan = scan
     self.ann = currentAnn
+    self.annPointGroup = []
     self.imgIndex = 0
-    self.AnnXGroup = []
-    self.AnnYGroup = []
-    self.AnnPointGroup = []
     self.pointTag = {}
     self.patchSize = 10
 
   def cutAnn(self):
-    AnnPointGroup = self.getAnnPoints()
+    self.groupXY()
     self.pointTag = self.checkPointsInAnn()
     self.savePatchInAnn()
 
-  #get the points of annotation polygon
-  def getAnnPoints(self):
-     self.AnnXGroup = self.dealWithAnnGroup(self.ann.coordinateX)
-     self.AnnYGroup = self.dealWithAnnGroup(self.ann.coordinateY)
-     self.AnnPointGroup = self.groupXY()
-     return self.AnnPointGroup
-
-  def dealWithAnnGroup(self, AnnGroup):
-    AnnGroup = [float(number) for number in AnnGroup]
-    # It is a Ann polygon so we add the first point to the end to make a closed graph
-    AnnGroup.append(AnnGroup[0])
-    return AnnGroup
-
   def groupXY(self):
-    for i in range(0, len(self.AnnXGroup)):
-        self.AnnPointGroup.append(point(self.AnnXGroup[i], self.AnnYGroup[i]))
-    return self.AnnPointGroup
+    for i in range(0, len(self.ann.coordinateX)):
+        self.annPointGroup.append(point(float(self.ann.coordinateX[i]), float(self.ann.coordinateY[i])))
+    self.annPointGroup.append(self.annPointGroup[0])
 
   # Find out if each point is in the Anngon, and use a tag True if it is, tag False if it is not
   def checkPointsInAnn(self):
     for i in range(self.ann.xMin, self.ann.xMax, self.patchSize):
       for j in range(self.ann.yMin, self.ann.yMax, self.patchSize):
-        if isPointInAnn().isInAnn(point(i, j), self.AnnPointGroup):
+        if isPointInAnn().isInAnn(point(i, j), self.annPointGroup):
           self.pointTag.update({(i, j) : True})
         else:
           self.pointTag.update({(i, j) : False})

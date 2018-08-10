@@ -13,23 +13,23 @@ class isPointInAnn(object):
   def __init__(self):
       pass
 
-  def isInAnn(self, testPoint, AnnPointGroup):
+  def isInAnn(self, testPoint, annPointGroup):
     inAnn = False
-    for i in range(0, len(AnnPointGroup) - 1):
-        if (self.pointLieRight(testPoint, AnnPointGroup[i], AnnPointGroup[i+1])):
+    for i in range(0, len(annPointGroup) - 1):
+        if (self.pointLieRight(testPoint, annPointGroup[i], annPointGroup[i+1])):
           inAnn = not inAnn
     return inAnn
 
-  def pointLieRight(self, testPoint, AnnPoint1, AnnPoint2):
+  def pointLieRight(self, testPoint, annPoint1, annPoint2):
     lieRight = False
-    if min(AnnPoint1.y, AnnPoint2.y) < testPoint.y <= max(AnnPoint1.y, AnnPoint2.y)\
-       and ( testPoint.x >= AnnPoint1.x or testPoint.x >= AnnPoint2.x):
+    if min(annPoint1.y, annPoint2.y) < testPoint.y <= max(annPoint1.y, annPoint2.y)\
+       and ( testPoint.x >= annPoint1.x or testPoint.x >= annPoint2.x):
 
-      if (AnnPoint2.x - AnnPoint1.x) == 0:
+      if (annPoint2.x - annPoint1.x) == 0:
           lieRight = True
       else:
-        a = (AnnPoint2.y - AnnPoint1.y) / (AnnPoint2.x - AnnPoint1.x)
-        b = AnnPoint1.y - a * AnnPoint1.x
+        a = (annPoint2.y - annPoint1.y) / (annPoint2.x - annPoint1.x)
+        b = annPoint1.y - a * annPoint1.x
         if  testPoint.x > ( testPoint.y - b) / a:
           lieRight = True
     return lieRight

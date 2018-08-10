@@ -17,7 +17,7 @@ class scanAnnotations(object):
 
   def scanAnnotations(self):
     for  currentAnn in self.annList:
-        ann = cutAnnToPatches(currentAnn, self.scan)
+        ann = cutAnnToPatches( self.scan, currentAnn)
         ann.cutAnn()
 
 test = scanAnnotations(sysFilePath, xmlFilePath)
