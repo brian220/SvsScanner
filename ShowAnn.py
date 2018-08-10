@@ -2,15 +2,14 @@
 Draw the graph that include the annotation part and patches part
 """
 import matplotlib.pyplot as plt
-#class showAnnPart(object):
 
-def addPolygonGraph(polyXGroup, polyYGroup):
-  polygonPoints = []
-  for i in range(0, len(polyXGroup)):
-     polygonPoints.append((polyXGroup[i], polyYGroup[i]))
-  polygon = plt.Polygon(polygonPoints, fill=None, edgecolor='r')
+def addAnnGraph(AnnXGroup, AnnYGroup):
+  AnnPoints = []
+  for i in range(0, len(AnnXGroup)):
+     AnnPoints.append((AnnXGroup[i], AnnYGroup[i]))
+  AnnGraph = plt.Polygon(AnnPoints, fill=None, edgecolor='r')
   annImg = plt.subplot(111)
-  annImg.add_patch(polygon)
+  annImg.add_patch(AnnGraph)
   return annImg
 
 def addPatchGraph(annImg, i, j, patch_size):
