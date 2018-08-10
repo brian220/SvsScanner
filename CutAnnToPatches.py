@@ -3,9 +3,9 @@ This program is used to store patches which have all their 4 angles' coordinates
 """
 import sys
 sys.path.append("../IsPointInAnn")
-sys.path.append("../ShowAnnGraph")
-from IsPointInAnn import point, isInAnn
-from ShowAnn import addAnnGraph, addPatchGraph, showAnnGraph
+sys.path.append("../ShowAnn")
+from IsPointInAnn import point, isPointInAnn
+from ShowAnn import showAnn
 import openslide
 from openslide import open_slide # http://openslide.org/api/python/
 from PIL import Image
@@ -49,21 +49,21 @@ class cutAnnToPatches(object):
   def checkPointsInAnn(self):
     for i in range(self.ann.border[0], self.ann.border[1], self.patchSize):
       for j in range(self.ann.border[2], self.ann.border[3], self.patchSize):
-        if isInAnn(point(i, j), self.AnnPointGroup):
+        if isPointInAnn().isInAnn(point(i, j), self.AnnPointGroup):
           self.pointTag.update({(i, j) : True})
         else:
           self.pointTag.update({(i, j) : False})
     return self.pointTag
 
   def savePatchInAnn(self):
-    annImg = addAnnGraph(self.ann.coordinateX, self.ann.coordinateY)
+    showAnn().addAnnGraph(self.ann.coordinateX, self.ann.coordinateY)
     for i in range(self.ann.border[0], self.ann.border[1], self.patchSize):
       for j in range(self.ann.border[2], self.ann.border[3], self.patchSize):
         if self.isFourAnglesInAnn(i, j):
-          addPatchGraph(annImg, i, j, self.patchSize)
+          showAnn().addPatchGraph(i, j, self.patchSize)
           self.savePatchFromSlide(i, j)
           self.imgIndex += 1
-    showAnnGraph(annImg)
+    showAnn().showAnnGraph()
 
   def isFourAnglesInAnn(self, i, j):
     inAnn = False
