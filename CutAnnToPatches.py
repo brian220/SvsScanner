@@ -47,8 +47,8 @@ class cutAnnToPatches(object):
 
   # Find out if each point is in the Anngon, and use a tag True if it is, tag False if it is not
   def checkPointsInAnn(self):
-    for i in range(self.ann.border[0], self.ann.border[1], self.patchSize):
-      for j in range(self.ann.border[2], self.ann.border[3], self.patchSize):
+    for i in range(self.ann.xMin, self.ann.xMax, self.patchSize):
+      for j in range(self.ann.yMin, self.ann.yMax, self.patchSize):
         if isPointInAnn().isInAnn(point(i, j), self.AnnPointGroup):
           self.pointTag.update({(i, j) : True})
         else:
@@ -57,8 +57,8 @@ class cutAnnToPatches(object):
 
   def savePatchInAnn(self):
     showAnn().addAnnGraph(self.ann.coordinateX, self.ann.coordinateY)
-    for i in range(self.ann.border[0], self.ann.border[1], self.patchSize):
-      for j in range(self.ann.border[2], self.ann.border[3], self.patchSize):
+    for i in range(self.ann.xMin, self.ann.xMax, self.patchSize):
+      for j in range(self.ann.yMin, self.ann.yMax, self.patchSize):
         if self.isFourAnglesInAnn(i, j):
           showAnn().addPatchGraph(i, j, self.patchSize)
           self.savePatchFromSlide(i, j)

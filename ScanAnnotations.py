@@ -1,8 +1,8 @@
 import sys
 sys.path.append("../CutAnnToPatches")
-sys.path.append("../Read_xml")
+sys.path.append("../GetAnnFromXml")
 from CutAnnToPatches import cutAnnToPatches
-from Read_xml import read_xml
+from GetAnnFromXml import getAnnFromXml
 import openslide
 from openslide import open_slide # http://openslide.org/api/python/
 
@@ -11,11 +11,12 @@ xmlFilePath = "patient_004_node_4.xml"
 
 class scanAnnotations(object):
   def __init__(self, sysFilePath, xmlFilePath):
-      self.annlist = read_xml(xmlFilePath)
+      getAnn = getAnnFromXml(xmlFilePath)
+      self.annList = getAnn.readXml()
       self.scan = openslide.OpenSlide(sysFilePath)
 
   def scanAnnotations(self):
-    for  currentAnn in self.annlist:
+    for  currentAnn in self.annList:
         ann = cutAnnToPatches(currentAnn, self.scan)
         ann.cutAnn()
 
