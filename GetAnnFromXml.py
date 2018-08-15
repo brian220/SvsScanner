@@ -1,10 +1,9 @@
+"""
+This program is used for read an annotation xml File and store in class Annotation
+"""
 import xml.etree.cElementTree as ET
 import os.path
 import math
-"""
-This program is used for read an annotation part and store in class Annotation
-border = [0,0,0,0] #A 4 - index list [leftmost, rightmost, upmost, downmost]
-"""
 class Annotation(object):
   def __init__(self):
     self.name = " "
@@ -18,7 +17,12 @@ class Annotation(object):
     self.yMin = 0
     self.yMax = 0
 
-class getAnnFromXml(object):
+    # Use for record which patch is in the annotation
+    self.patchInAnn = {}
+    # patch size
+    self.patchSize = 50
+
+class GetAnnFromXml(object):
   def __init__(self, fileName):
       self.tree = ET.ElementTree(file = fileName)
       self.annList = []

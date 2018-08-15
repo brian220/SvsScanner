@@ -16,10 +16,13 @@ class isPointInAnn(object):
   def isInAnn(self, testPoint, annPointGroup):
     inAnn = False
     for i in range(0, len(annPointGroup) - 1):
+        # If there are odd number of lines line in the left of the points,
+        # then the point is in in the annotation
         if (self.pointLieRight(testPoint, annPointGroup[i], annPointGroup[i+1])):
           inAnn = not inAnn
     return inAnn
 
+  # Check if the point is lying right of the line(annPoint1 - annPoint2)
   def pointLieRight(self, testPoint, annPoint1, annPoint2):
     lieRight = False
     if min(annPoint1.y, annPoint2.y) < testPoint.y <= max(annPoint1.y, annPoint2.y)\
